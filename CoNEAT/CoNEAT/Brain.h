@@ -14,7 +14,7 @@ private:
 
 
 public:
-	//Creates a neuralNet with the given number of input and outputs
+	//Creates a fresh neuralNet with the given number of input and outputs
 	Brain(unsigned inputNumber, unsigned outputNumber);
 	//Copies a brain into this brain. Should perform a Deep-Copy
 	Brain(const Brain& other);

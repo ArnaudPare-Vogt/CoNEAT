@@ -3,7 +3,9 @@
 #include <vector>
 
 class Node {
-	enum class node_type {INPUT, OUTPUT, HIDDEN};
+public:
+	enum class node_type { INPUT, OUTPUT, HIDDEN };
+private:
 	node_type type;
 	float lastValue, value;
 	float incummulation;
@@ -22,5 +24,7 @@ public:
 	
 	//gets the value of the node. If the node is not fired yet, it tries to do so.
 	float getValue();
+	//Returns the type of the node.
+	node_type getType();
 
 };
