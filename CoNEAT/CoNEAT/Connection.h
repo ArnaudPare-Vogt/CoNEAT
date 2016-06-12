@@ -14,7 +14,7 @@ class Connection {
 	static uint HEV_COUNTER;//historical evolution index counter
 
 
-public:
+public: 
 	Connection(Node &_in, Node &_out, int _wt, uint _HEV = HEV_COUNTER++) : in(&_in), out(&_out), wt(_wt), HEV(_HEV), recursive(false) {};
 	~Connection();
 
