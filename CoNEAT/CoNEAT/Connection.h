@@ -6,9 +6,10 @@
 
 class Connection {
 	typedef unsigned int uint;
-	Node *in, *out;
-	float wt;
-	bool recursive;
+	Node	*in,//input node of connection
+			*out;//output node of connection
+	float wt;//weight of the connection 
+	bool recursive;//is the connection recursive?
 	const uint HEV;//historical evolution index
 	static uint HEV_COUNTER;//historical evolution index counter
 
