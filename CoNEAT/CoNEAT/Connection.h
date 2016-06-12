@@ -16,6 +16,8 @@ class Connection {
 
 public: 
 	Connection(Node &_in, Node &_out, int _wt, uint _HEV = HEV_COUNTER++) : in(&_in), out(&_out), wt(_wt), HEV(_HEV), recursive(false) {};
+	//Creates a new Connection by performing a Deep-Copy
+	Connection(const Connection& toDupe);
 	~Connection();
 
 	//getters

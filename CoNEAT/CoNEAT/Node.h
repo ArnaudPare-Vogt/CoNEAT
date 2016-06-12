@@ -20,5 +20,7 @@ public:
 		this->type = t;
 	};
 	
+	//gets the value of the node. If the node is not fired yet, it tries to do so.
+	float getValue();
 
 };
