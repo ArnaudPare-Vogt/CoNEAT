@@ -12,7 +12,10 @@ private:
 	float (*activationFunction)(float incumulation);
 	float (*cummulationFunction)(float n, float total);
 public:
-	Node(node_type n_type) :type(n_type) { this->lastValue = 0; this->value = 0; this->incummulation = 0; };
+	//Creates a node of the given type.
+	Node(node_type n_type);
+	//The copy constructor of the node.
+	Node(const Node& other);
 	~Node();
 	inline void process() { this->value = this->activationFunction(this->incummulation); };
 	inline void cummulate(float n) { this->incummulation = this->cummulationFunction(n, this->incummulation); };
@@ -23,7 +26,9 @@ public:
 	};
 	
 	//gets the value of the node. If the node is not fired yet, it tries to do so.
-	float getValue();
+	float getValue() const;
+	//Gets the last value (the value of the last tick) of the node
+	float getLastValue() const;
 	//Returns the type of the node.
 	node_type getType();
 

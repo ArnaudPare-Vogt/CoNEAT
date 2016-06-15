@@ -12,6 +12,7 @@ private:
 	std::vector<Node> nodes;
 	std::vector<Node*> input, output;
 
+	unsigned inputNumber, outputNumber;
 
 public:
 	//Creates a fresh neuralNet with the given number of input and outputs
@@ -27,7 +28,7 @@ public:
 	//Adds a new connection
 	void mutateAddConnection();
 
-	//Geenrates the input and output list from the current nodes
+	//Genrates the input and output list from the current nodes
 	void generateInOutList();
 	//Pre-processes all the outputs nodes. In a sense 'bakes' the net so that it can be used for generation values.
 	void preProcessNodes();
