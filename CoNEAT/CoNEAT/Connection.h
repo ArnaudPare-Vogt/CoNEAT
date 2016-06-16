@@ -3,7 +3,6 @@
 #include "Node.h"
 	
 
-
 class Connection {
 	typedef unsigned int uint;
 	Node	*in,//input node of connection
