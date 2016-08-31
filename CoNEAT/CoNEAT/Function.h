@@ -13,8 +13,6 @@
 //Cumulative functions
 
 //Computes the sum of n and total
-float sum(float n, float total) {
-	return total + n;
-}
+float sum(float n, float total);
 
 //Activation functions

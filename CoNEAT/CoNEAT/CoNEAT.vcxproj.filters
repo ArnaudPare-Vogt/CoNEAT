@@ -18,27 +18,24 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Connection.cpp">
+    <ClCompile Include="Function.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Node.cpp">
+    <ClCompile Include="Evo\Evo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Brain.cpp">
+    <ClCompile Include="Evo\Individual.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Brain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Connection.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Node.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Function.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Evo\Evo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Evo\Individual.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
