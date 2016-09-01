@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Connection.h"
+#include "Evo\Individual.h"
 #include <vector>
 
 
@@ -12,32 +13,34 @@ private:
 	std::vector<Node> nodes;
 	std::vector<Node*> input, output;
 
-	unsigned inputNumber, outputNumber;
+	int inputNumber, outputNumber;
+
+	//Flag to see if pre process was called
+	bool preProcessed = false;
 
 public:
-	//Creates a fresh neuralNet with the given number of input and outputs
-	Brain(unsigned inputNumber, unsigned outputNumber);
+	//Creates a brain from an individual
+	Brain(const Individual& i);
+#if 0
 	//Copies a brain into this brain. Should perform a Deep-Copy
 	Brain(const Brain& other);
+#endif
 	//Destructor
 	virtual ~Brain();
 
-
-	//Causes a random node mutaion to occur
-	void mutateAddNode();
-	//Adds a new connection
-	void mutateAddConnection();
-
-	//Genrates the input and output list from the current nodes
-	void generateInOutList();
-	//Pre-processes all the outputs nodes. In a sense 'bakes' the net so that it can be used for generation values.
-	void preProcessNodes();
 	//Processes the neuralNet, using the current input values, and sets the output values
 	void processNodes();
 
 	//Getter for the input nodes.
-	inline std::vector<Node*> getInputs() { return input; };
+	inline const std::vector<Node*> getInputs() const { return input; };
 	//Getter for the output nodes
-	inline std::vector<Node*> getOutputs() { return output; };
+	inline const std::vector<Node*> getOutputs() const { return output; };
 
+private:
+	//Creates a node if the node id has no node yet, if it has, and returns the corresponding one
+	Node& createNode(int nodeId);
+	//Gets the node referenced (or a null pointer)
+	Node* getNode(int nodeID);
+	//Fixed and sets the correct flags in case the net is recursive
+	void fixRecursivity(Node& s, std::vector<int>& stack);
 };

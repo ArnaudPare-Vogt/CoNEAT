@@ -12,14 +12,15 @@ std::uniform_int_distribution<> IndividualDef::getOutputDistrib() {
 	return dis;
 }
 
-Individual::Individual(IndividualDef geneNum) {
+Individual::Individual(IndividualDef geneNum) : 
+inputNumber(geneNum.inputNumber), outputNumber(geneNum.outputNumber) {
 	Link temp;
 
 	std::uniform_int_distribution<> inputDis = geneNum.getInputDistrib();
 	std::uniform_int_distribution<> outputDis = geneNum.getOutputDistrib();
 
 
-	for (unsigned i = 0; i < geneNum.genesNum; i++)
+	for (int i = 0; i < geneNum.genesNum; i++)
 	{
 		temp.in = inputDis(rng);
 		temp.out = outputDis(rng);
@@ -51,11 +52,17 @@ std::ostream& operator<<(std::ostream& os, const Individual& ind) {
 	return os;
 }
 
+const std::vector<Link>& Individual::getGenes() const {
+	return genes;
+}
 
+const int Individual::getInputNumber() const {
+	return inputNumber;
+}
 
-
-
-
+const int Individual::getOutputNumber() const {
+	return outputNumber;
+}
 
 
 
@@ -63,12 +70,12 @@ std::ostream& operator<<(std::ostream& os, const Individual& ind) {
 
 
 Link::Link(): 
-in(0), out(0){}
+in(0), out(0), weight(0){}
 
 Link::Link(const Link& other) :
 in(other.in), out(other.out){}
 
 std::ostream& operator<<(std::ostream& os, const Link& link) {
-	os << "Gene from N" << link.in << " to N" << link.out << std::endl;
+	os << "Gene from N" << link.in << " to N" << link.out << " and weights " << link.weight << std::endl;
 	return os;
 }

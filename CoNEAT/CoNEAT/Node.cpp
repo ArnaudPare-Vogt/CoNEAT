@@ -2,8 +2,8 @@
 
 
 //Creates a node of the given type.
-Node::Node(node_type type) :
-	type(type),
+Node::Node(int nodeId) :
+	nodeId(nodeId),
 	lastValue(0),
 	value(0),
 	incummulation(0),
@@ -16,7 +16,7 @@ Node::Node(node_type type) :
 //The copy constructor of the node.
 //This should match the Node(node_type) constructor
 Node::Node(const Node& other) :
-	type(other.type),
+	nodeId(nodeId),
 	value(other.getValue()),
 	lastValue(other.getLastValue()),
 	incummulation(other.incummulation),
@@ -46,6 +46,20 @@ void Node::reset() {
 	activated = false;
 }
 
+//Attaches c as an input
+void Node::attachInput(Connection& c) {
+	inputs.push_back(&c);
+}
+
+//Detaches c from the input list
+void Node::detatchInput(Connection& c) {
+	std::vector<Connection*>::iterator it = std::find(inputs.begin(), inputs.end(), &c);
+	if (it != inputs.end()) {
+		inputs.erase(it);
+	}
+}
+
+
 //Gets the value of the node.
 float Node::getValue() const {
 	return value;
@@ -56,8 +70,12 @@ float Node::getLastValue() const {
 	return lastValue;
 }
 
-//Returns the type of the node.
-Node::node_type Node::getType() {
-	return this->type;
+//Returns the ID of the current Node
+int Node::getId() const {
+	return nodeId;
 }
 
+//Returns the attached inputs of this node. Useful to navigate the graph
+std::vector<Connection*> Node::getInputs() {
+	return inputs;
+}

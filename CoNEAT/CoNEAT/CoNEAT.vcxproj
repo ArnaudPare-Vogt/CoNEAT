@@ -110,15 +110,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Brain.cpp" />
+    <ClCompile Include="Connection.cpp" />
     <ClCompile Include="Evo\Evo.cpp" />
     <ClCompile Include="Evo\Individual.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Node.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Brain.h" />
+    <ClInclude Include="Connection.h" />
     <ClInclude Include="Evo\Evo.h" />
     <ClInclude Include="Evo\Individual.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="Node.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

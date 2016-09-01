@@ -20,6 +20,7 @@ struct IndividualDef {
 class Individual {
 
 	std::vector<Link> genes;
+	int inputNumber, outputNumber;
 
 public:
 	Individual(IndividualDef def);
@@ -28,12 +29,17 @@ public:
 
 	Individual(const Individual &other);
 	friend std::ostream& operator<<(std::ostream& os, const Individual& ind);
+
+	const std::vector<Link>& getGenes() const;
+	const int getInputNumber() const;
+	const int getOutputNumber() const;
 };
 
 struct Link {
 
 	int in;
 	int out;
+	float weight;
 
 	Link();
 	Link(const Link &other);

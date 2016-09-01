@@ -11,6 +11,8 @@ private:
 	std::vector<Individual> currentGenetation;
 public:
 	Evolution(unsigned generationSize, unsigned initialGenesNum);
-	void createFirstGen();
+	void createFirstGen(IndividualDef& definition);
 	std::ostream& printInfo(std::ostream &cout) const;
+
+	const std::vector<Individual> getCurrentGeneration() const;
 };

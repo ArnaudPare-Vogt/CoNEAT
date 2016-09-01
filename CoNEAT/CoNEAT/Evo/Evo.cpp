@@ -7,15 +7,9 @@ Evolution::Evolution(unsigned generationSize, unsigned initialGenesNum)
 
 
 //Creates the first generation of individuals based on the given parameters.
-void Evolution::createFirstGen() {
+void Evolution::createFirstGen(IndividualDef& definition) {
 	this->currentGenetation.clear();
-
-	//TODO settable def
-	IndividualDef def;
-	def.genesNum = 10;
-	def.inputNumber = 4;
-	def.outputNumber = 2;
-	Individual ind(def);
+	Individual ind(definition);
 	for (unsigned i = 0; i < initialGenes; i++) 
 	{
 		currentGenetation.push_back(ind);
@@ -44,3 +38,7 @@ std::ostream& Evolution::printInfo(std::ostream &in) const {
 	return in;
 }
 
+
+const std::vector<Individual> Evolution::getCurrentGeneration() const {
+	return currentGenetation;
+}
