@@ -9,14 +9,14 @@
 //Class that controlls the (physical) neural net. Is it technically the phenotype of the creature.
 class Brain {
 private:
-	std::vector<Connection> connections;
-	std::vector<Node> nodes;
-	std::vector<Node*> input, output;
-
 	int inputNumber, outputNumber;
 
 	//Flag to see if pre process was called
 	bool preProcessed = false;
+
+	std::vector<Node> nodes;
+	std::vector<Node*> input, output;
+	std::vector<Connection> connections;
 
 public:
 	//Creates a brain from an individual
@@ -27,7 +27,9 @@ public:
 #endif
 	//Destructor
 	virtual ~Brain();
-
+	
+	//Pre-processes the nodes. Should be called before inputs are set.
+	void preProcessNodes();
 	//Processes the neuralNet, using the current input values, and sets the output values
 	void processNodes();
 
@@ -37,8 +39,8 @@ public:
 	inline const std::vector<Node*> getOutputs() const { return output; };
 
 private:
-	//Creates a node if the node id has no node yet, if it has, and returns the corresponding one
-	Node& createNode(int nodeId);
+	//Creates a node if the node id has no node yet. DO NOT CALL IF YOU DON'T KNOW WHAT YOU ARE DOING. NOT SAFE!!!
+	void createNode(int nodeId);
 	//Gets the node referenced (or a null pointer)
 	Node* getNode(int nodeID);
 	//Fixed and sets the correct flags in case the net is recursive

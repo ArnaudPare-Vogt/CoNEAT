@@ -17,6 +17,8 @@ public:
 	Connection(const Connection& toDupe);
 	~Connection();
 
+	float fetchValue();
+
 	//getters
 	Node* getIn();
 	Node* getOut();

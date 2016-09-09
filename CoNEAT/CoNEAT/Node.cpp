@@ -1,5 +1,5 @@
 #include "Node.h"
-
+#include "Connection.h"
 
 //Creates a node of the given type.
 Node::Node(int nodeId) :
@@ -16,11 +16,13 @@ Node::Node(int nodeId) :
 //The copy constructor of the node.
 //This should match the Node(node_type) constructor
 Node::Node(const Node& other) :
-	nodeId(nodeId),
+	nodeId(other.nodeId),
 	value(other.getValue()),
 	lastValue(other.getLastValue()),
 	incummulation(other.incummulation),
-	activated(other.activated){
+	activated(other.activated),
+	activationFunction(other.activationFunction),
+	cummulationFunction(other.cummulationFunction){
 
 }
 
@@ -30,9 +32,16 @@ Node::~Node() {
 	//static functions, and should NOT be deleted
 }
 
+void Node::freeze() {
+	activated = true;
+}
+
 //Tries to fire the node
 void Node::fire() {
 	if (!activated) {
+		for each (Connection* c in inputs) {
+			cummulate((*c).fetchValue());
+		}
 		this->process();
 		activated = true;
 	}
@@ -57,6 +66,10 @@ void Node::detatchInput(Connection& c) {
 	if (it != inputs.end()) {
 		inputs.erase(it);
 	}
+}
+
+void Node::setValue(float value) {
+	this->value = value;
 }
 
 

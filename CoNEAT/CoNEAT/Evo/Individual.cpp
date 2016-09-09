@@ -29,6 +29,12 @@ inputNumber(geneNum.inputNumber), outputNumber(geneNum.outputNumber) {
 
 }
 
+Individual::Individual(std::vector<Link> &genes, int inputNumber, int outputNumber) :
+	inputNumber(inputNumber), outputNumber(outputNumber)
+{
+	this->genes = genes;
+}
+
 Individual::Individual(const Individual& other) {
 	for (std::vector<Link>::const_iterator it = other.genes.begin(); it != other.genes.end(); it++) {
 		genes.push_back(*it);
@@ -73,7 +79,7 @@ Link::Link():
 in(0), out(0), weight(0){}
 
 Link::Link(const Link& other) :
-in(other.in), out(other.out){}
+in(other.in), out(other.out), weight(other.weight){}
 
 std::ostream& operator<<(std::ostream& os, const Link& link) {
 	os << "Gene from N" << link.in << " to N" << link.out << " and weights " << link.weight << std::endl;

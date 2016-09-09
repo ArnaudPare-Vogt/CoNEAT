@@ -1,18 +1,29 @@
 #include "Connection.h"
 
 Connection::Connection(Node &_in, Node &_out, float _wt) :
-in(&_in), out(&_out), wt(_wt) {
-	_in.attachInput(*this);
+in(&_in), out(&_out), wt(_wt), recursive(false) {
+	_out.attachInput(*this);
 }
 
 Connection::Connection(const Connection &other) :
-	in(other.in), out(other.out), wt(other.wt) {
-	(*in).attachInput(*this);
+	in(other.in), out(other.out), wt(other.wt), recursive(other.recursive) {
+	out->attachInput(*this);
 }
 
 Connection::~Connection() {
+	out->detatchInput(*this);
 }
 
+
+float Connection::fetchValue() {
+	if (recursive) {
+		return (*in).getLastValue();
+	}
+	else {
+		(*in).fire();
+		return (*in).getValue() * wt;
+	}
+}
 
 
 Node* Connection::getIn() {

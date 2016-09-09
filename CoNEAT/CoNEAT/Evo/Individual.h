@@ -24,6 +24,7 @@ class Individual {
 
 public:
 	Individual(IndividualDef def);
+	Individual(std::vector<Link> &genes, int inputNumber, int outputNumber);
 
 	~Individual();
 
