@@ -117,6 +117,7 @@
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Rng.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brain.h" />
@@ -125,6 +126,7 @@
     <ClInclude Include="Evo\Individual.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="Rng.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

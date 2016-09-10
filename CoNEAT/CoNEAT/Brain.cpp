@@ -8,21 +8,25 @@ inputNumber(indiv.getInputNumber()), outputNumber(indiv.getOutputNumber()){
 	//step A -> create all Nodes
 	
 	for (std::vector<Link>::const_iterator it = indiv.getGenes().begin(); it != indiv.getGenes().end(); it++) {
-		int nodeIdA = (*it).in;
-		int nodeIdB = (*it).out;
-		
-		createNode(nodeIdA);
-		createNode(nodeIdB);
+		if ((*it).activated) {
+			int nodeIdA = (*it).in;
+			int nodeIdB = (*it).out;
+
+			createNode(nodeIdA);
+			createNode(nodeIdB);
+		}
 	}
 
 	//Step B -> create all connections
 
 	for (Link link : indiv.getGenes()) {
-		Node* in = getNode(link.in);
-		Node* out = getNode(link.out);
+		if (link.activated) {
+			Node* in = getNode(link.in);
+			Node* out = getNode(link.out);
 
-		Connection c(*in, *out, link.weight);
-		connections.push_back(c);
+			Connection c(*in, *out, link.weight);
+			connections.push_back(c);
+		}
 	}
 
 	//step B -> get all the io nodes

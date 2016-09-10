@@ -2,8 +2,10 @@
 
 #include <random>
 #include <vector>
+#include "../Rng.h"
 
 struct Link;
+class Evolution;
 
 struct IndividualDef {
 	int genesNum;
@@ -18,7 +20,6 @@ struct IndividualDef {
 };
 
 class Individual {
-
 	std::vector<Link> genes;
 	int inputNumber, outputNumber;
 
@@ -31,9 +32,12 @@ public:
 	Individual(const Individual &other);
 	friend std::ostream& operator<<(std::ostream& os, const Individual& ind);
 
+
 	const std::vector<Link>& getGenes() const;
 	const int getInputNumber() const;
 	const int getOutputNumber() const;
+
+	friend Evolution;
 };
 
 struct Link {
@@ -41,6 +45,7 @@ struct Link {
 	int in;
 	int out;
 	float weight;
+	bool activated;
 
 	Link();
 	Link(const Link &other);

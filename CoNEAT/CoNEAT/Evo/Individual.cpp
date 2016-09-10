@@ -1,6 +1,5 @@
 #include "Individual.h"
 
-std::mt19937 rng;
 
 std::uniform_int_distribution<> IndividualDef::getInputDistrib() {
 	std::uniform_int_distribution<> dis(0, inputNumber-1);
@@ -13,7 +12,9 @@ std::uniform_int_distribution<> IndividualDef::getOutputDistrib() {
 }
 
 Individual::Individual(IndividualDef geneNum) : 
-inputNumber(geneNum.inputNumber), outputNumber(geneNum.outputNumber) {
+	inputNumber(geneNum.inputNumber),
+	outputNumber(geneNum.outputNumber) 
+{
 	Link temp;
 
 	std::uniform_int_distribution<> inputDis = geneNum.getInputDistrib();
@@ -30,18 +31,23 @@ inputNumber(geneNum.inputNumber), outputNumber(geneNum.outputNumber) {
 }
 
 Individual::Individual(std::vector<Link> &genes, int inputNumber, int outputNumber) :
-	inputNumber(inputNumber), outputNumber(outputNumber)
+	inputNumber(inputNumber),
+	outputNumber(outputNumber)
 {
 	this->genes = genes;
 }
 
-Individual::Individual(const Individual& other) {
+Individual::Individual(const Individual& other) :
+	inputNumber(other.inputNumber),
+	outputNumber(other.outputNumber) 
+{
 	for (std::vector<Link>::const_iterator it = other.genes.begin(); it != other.genes.end(); it++) {
 		genes.push_back(*it);
 	}
 }
 
-Individual::~Individual() {
+Individual::~Individual() 
+{
 
 }
 
@@ -76,12 +82,19 @@ const int Individual::getOutputNumber() const {
 
 
 Link::Link(): 
-in(0), out(0), weight(0){}
+in(0), out(0), weight(1), activated(true) {}
 
 Link::Link(const Link& other) :
-in(other.in), out(other.out), weight(other.weight){}
+in(other.in), out(other.out), weight(other.weight), activated(other.activated){}
 
 std::ostream& operator<<(std::ostream& os, const Link& link) {
-	os << "Gene from N" << link.in << " to N" << link.out << " and weights " << link.weight << std::endl;
+	if (link.activated) {
+		os << "Gene from N";
+	}
+	else {
+		os << "Unactive  N";
+	}
+
+	os << link.in << " to N" << link.out << " and weights " << link.weight << std::endl;
 	return os;
 }

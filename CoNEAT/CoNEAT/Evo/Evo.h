@@ -1,18 +1,30 @@
 #pragma once
 
 #include <algorithm>
+#include <cassert>
 #include <iostream>
+#include <random>
 #include <vector>
 #include "Individual.h"
+#include "../Rng.h"
 
 
 
 class Evolution{
 private:
+	int nextNodeIndex;
+
 	unsigned generationSize;
 	unsigned initialGenes;
 
 	unsigned selectionSize;
+
+	float crossoverChance;
+	float weightChangePerGene;
+	float weightChangeAmount;
+
+	float nodeAdditionChance;
+	float connectionAdditionChance;
 
 	std::vector<Individual> currentGenetation;
 
