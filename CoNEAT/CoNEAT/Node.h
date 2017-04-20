@@ -56,5 +56,5 @@ public:
 	//Returns the ID of the current Node
 	int getId() const;
 	//Returns the attached inputs of this node. Useful to navigate the graph
-	std::vector<Connection*> getInputs();
+	std::vector<Connection*> &getInputs();
 };

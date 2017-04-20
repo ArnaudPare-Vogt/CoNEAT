@@ -17,6 +17,11 @@ inputNumber(indiv.getInputNumber()), outputNumber(indiv.getOutputNumber()){
 		}
 	}
 
+	for (size_t i = 0; i < inputNumber + outputNumber; i++)
+	{
+		createNode(i);
+	}
+
 	//Step B -> create all connections
 
 	for (Link link : indiv.getGenes()) {
@@ -43,7 +48,7 @@ inputNumber(indiv.getInputNumber()), outputNumber(indiv.getOutputNumber()){
 	}
 
 	//step C -> fix recursivity problems
-	for (Node* nptr : input) {
+	for (Node* nptr : output) {
 		std::vector<int> stack;
 		fixRecursivity(*nptr, stack);
 	}
@@ -99,11 +104,11 @@ Node* Brain::getNode(int id) {
 void Brain::fixRecursivity(Node& startNeuron, std::vector<int>& stack) {
 	stack.push_back(startNeuron.getId());
 	
-	std::vector<Connection*> con = startNeuron.getInputs();
+	std::vector<Connection*> &con = startNeuron.getInputs();
 
-	for each(Connection* connectionPtr in con) {
-		Connection c = *connectionPtr;
-		Node next = *(c.getIn());
+	for (Connection* connectionPtr : con) {
+		Connection &c = *connectionPtr;
+		Node &next = *(c.getIn());
 		if (std::find(stack.begin(), stack.end(), next.getId()) != stack.end()) {
 			//Neuron is recursive!!!
 			c.setRecursivity(true);

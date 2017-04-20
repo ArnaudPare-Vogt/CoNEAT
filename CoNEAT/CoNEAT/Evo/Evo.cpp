@@ -1,8 +1,18 @@
 #include "Evo.h"
 
 
-Evolution::Evolution(unsigned generationSize, unsigned initialGenesNum) 
-: generationSize(generationSize), initialGenes(initialGenesNum), testIndex(0){
+Evolution::Evolution(const EvolutionDef &def) 
+	: generationSize(def.generationSize),
+	selectionSize(def.selectionSize),
+	crossoverChance(def.crossoverChance),
+	weightChangeChancePerGene(def.weightChangeChancePerGene),
+	weightChangeAmount(def.weightChangeAmount),
+	nodeAdditionChance(def.nodeAdditionChance),
+	connectionAdditionChance(def.connectionAdditionChance),
+	geneActivationChance(def.geneActivationChance),
+	geneDeactivationChance(def.geneDeactivationChance),
+	testIndex(0)
+{
 
 }
 
@@ -11,7 +21,7 @@ void Evolution::createFirstGen(IndividualDef& definition) {
 	nextNodeIndex = definition.inputNumber + definition.outputNumber;
 	this->currentGenetation.clear();
 	Individual ind(definition);
-	for (unsigned i = 0; i < initialGenes; i++) 
+	for (unsigned i = 0; i < generationSize; i++) 
 	{
 		currentGenetation.push_back(ind);
 	}
@@ -65,32 +75,41 @@ void Evolution::nextGen() {
 		for each (std::pair<Individual*, float> pair in testPlot) {
 			fitSum += pair.second;
 		}
-		for each (std::pair<Individual*, float> pair in testPlot) {
-			pair.second /= fitSum;
-		}
-		std::sort(testPlot.begin(), testPlot.end(),
-			[](const std::pair<Individual*, float> p1, const std::pair<Individual*, float> p2) {
-			return p1.second > p2.second;
-		});
-		std::vector<float> selected;
-		for (int i = 0; i < testPlot.size(); i++) {
-			float cummul = 0;
-			for (int j = i; j >= 0; j--) {
-				cummul += testPlot.at(j).second;
+		if (fitSum == 0.0f) {
+			std::uniform_real_distribution<float> pick(0, testPlot.size());
+			for (int i = 0; i < selectionSize; i++) {
+				std::pair<Individual*, float> pair = testPlot.at(pick(rng));
+				toCrossover.push_back(*pair.first);
 			}
-			selected.push_back(cummul);
 		}
+		else {
+			for each (std::pair<Individual*, float> pair in testPlot) {
+				pair.second /= fitSum;
+			}
+			std::sort(testPlot.begin(), testPlot.end(),
+				[](const std::pair<Individual*, float> p1, const std::pair<Individual*, float> p2) {
+				return p1.second > p2.second;
+			});
+			std::vector<float> selected;
+			for (int i = 0; i < testPlot.size(); i++) {
+				float cummul = 0;
+				for (int j = i; j >= 0; j--) {
+					cummul += testPlot.at(j).second;
+				}
+				selected.push_back(cummul);
+			}
 
 
-		for (int i = 0; i < selectionSize; i++) {
-			float r = fract(rng);
-			for (int j = 0; j < selected.size(); j++) {
-				if (selected.at(j) > r) {
-					std::pair<Individual*, float> pair = testPlot.at(j);
-					toCrossover.push_back(*pair.first);
+			for (int i = 0; i < selectionSize; i++) {
+				float r = fract(rng);
+				for (int j = 0; j < selected.size(); j++) {
+					if (selected.at(j) > r) {
+						std::pair<Individual*, float> pair = testPlot.at(j);
+						toCrossover.push_back(*pair.first);
 
-					selected[j] = -1;
-					break;
+						selected[j] = -1;
+						break;
+					}
 				}
 			}
 		}
@@ -150,10 +169,10 @@ void Evolution::nextGen() {
 			std::uniform_real_distribution<float> wheightChange(-weightChangeAmount, weightChangeAmount);
 			for (unsigned i = 0; i < currentGenetation.size(); i++)
 			{
-				Individual ind = currentGenetation[i];
+				Individual &ind = currentGenetation[i];
 				for (unsigned j = 0; j < ind.genes.size(); j++)
 				{
-					if (fract(rng) < weightChangePerGene) {
+					if (fract(rng) < weightChangeChancePerGene) {
 						ind.genes[j].weight += wheightChange(rng);
 					}
 				}
@@ -162,44 +181,47 @@ void Evolution::nextGen() {
 
 		//b) mutate node additions
 		{
-			for (unsigned i = 0; i < currentGenetation.size(); i++)
-			{
-				if (fract(rng) < nodeAdditionChance) {
-					std::uniform_int_distribution<> geneToSplit(0, currentGenetation[i].genes.size());
-					int geneID = geneToSplit(rng);
+			if (currentGenetation[0].genes.size() > 0) {
+				for (unsigned i = 0; i < currentGenetation.size(); i++)
+				{
+					if (fract(rng) < nodeAdditionChance) {
+						std::uniform_int_distribution<> geneToSplit(0, currentGenetation[i].genes.size() - 1);
+						int geneID = geneToSplit(rng);
 
-					int newNeuronId = nextNodeIndex;
-					nextNodeIndex++;
 
-					Link& oldLnk = currentGenetation[i].genes[geneID];
-					int inputNeuronId = oldLnk.in;
-					int outputNeuronId = oldLnk.out;
+						int newNeuronId = nextNodeIndex;
+						nextNodeIndex++;
 
-					Link newLinkA;
-					newLinkA.in = inputNeuronId;
-					newLinkA.out = newNeuronId;
-					newLinkA.activated = false;
+						Link& oldLnk = currentGenetation[i].genes[geneID];
+						int inputNeuronId = oldLnk.in;
+						int outputNeuronId = oldLnk.out;
 
-					Link newLinkB;
-					newLinkB.in = newNeuronId;
-					newLinkB.out = outputNeuronId;
-					newLinkB.activated = false;
+						Link newLinkA;
+						newLinkA.in = inputNeuronId;
+						newLinkA.out = newNeuronId;
+						newLinkA.activated = false;
 
-					for (unsigned j = 0; j < currentGenetation.size(); j++)
-					{
-						Individual ind = currentGenetation[j];
-						if (j == i) {
-							ind.genes[geneID].activated = false;
-							newLinkA.activated = true;
-							newLinkB.activated = true;
-							ind.genes.push_back(newLinkA);
-							ind.genes.push_back(newLinkB);
-							newLinkA.activated = false;
-							newLinkB.activated = false;
-						}
-						else {
-							ind.genes.push_back(newLinkA);
-							ind.genes.push_back(newLinkB);
+						Link newLinkB;
+						newLinkB.in = newNeuronId;
+						newLinkB.out = outputNeuronId;
+						newLinkB.activated = false;
+
+						for (unsigned j = 0; j < currentGenetation.size(); j++)
+						{
+							Individual &ind = currentGenetation[j];
+							if (j == i) {
+								ind.genes[geneID].activated = false;
+								newLinkA.activated = true;
+								newLinkB.activated = true;
+								ind.genes.push_back(newLinkA);
+								ind.genes.push_back(newLinkB);
+								newLinkA.activated = false;
+								newLinkB.activated = false;
+							}
+							else {
+								ind.genes.push_back(newLinkA);
+								ind.genes.push_back(newLinkB);
+							}
 						}
 					}
 				}
@@ -217,12 +239,12 @@ void Evolution::nextGen() {
 				if (fract(rng) < connectionAdditionChance) {
 
 					int inputNeuronId = inputNeuron(rng);
-					if (inputNeuronId > inputNumber) {
+					if (inputNeuronId >= inputNumber) {
 						inputNeuronId += outputNumber;
 					}
 
 					int outputNeuronId = outputNeuron(rng);
-					inputNeuronId += inputNumber;
+					outputNeuronId += inputNumber;
 
 					Link link;
 					link.in = inputNeuronId;
@@ -231,6 +253,28 @@ void Evolution::nextGen() {
 					{
 						link.activated = (j == i);
 						currentGenetation[j].genes.push_back(link);
+					}
+				}
+			}
+		}
+	}
+
+	//d) mutate genes activation/deactivation
+	{
+		for (int i = 0; i < currentGenetation.size(); i++)
+		{
+			Individual &ind = currentGenetation[i];
+			for (int j = 0; j < ind.genes.size(); j++)
+			{
+				Link &l = ind.genes[j];
+				if (l.activated) {
+					if (fract(rng) < geneDeactivationChance) {
+						l.activated = false;
+					}
+				}
+				else {
+					if (fract(rng) < geneActivationChance) {
+						l.activated = true;
 					}
 				}
 			}
@@ -248,7 +292,7 @@ void Evolution::nextGen() {
 void Evolution::prepareTestGeneration() {
 	testPlot.clear();
 	testIndex = 0;
-	for each(Individual ind in currentGenetation) {
+	for (Individual &ind : currentGenetation) {
 		Individual* indPtr = &ind;
 		std::pair<Individual*, float> pair(indPtr, 0);
 		testPlot.push_back(pair);

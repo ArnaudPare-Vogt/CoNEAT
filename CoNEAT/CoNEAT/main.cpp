@@ -1,3 +1,4 @@
+#include <fstream>
 #include "Function.h"
 #include "Evo\Evo.h"
 #include "Brain.h"
@@ -25,6 +26,9 @@
 int test();
 #endif
 
+#define TEST_GEN 200
+#define TEST_AMOUNT 50
+
 int main(int argc, char** argv) {
 #if WE_ARE_TESITNG
 	{
@@ -34,19 +38,79 @@ int main(int argc, char** argv) {
 		}
 	}
 #endif
+	std::ofstream out("output.csv");
+	out << "generation, test_mean_val" << std::endl;
 
-	Evolution evo(10, 10);
+	EvolutionDef evoDef;
+	evoDef.weightChangeChancePerGene = 0.5;
+	evoDef.nodeAdditionChance = 0.001;
+	evoDef.geneActivationChance = 0.2;
+	evoDef.generationSize = 1000;
+	evoDef.selectionSize = 250;
+	evoDef.geneActivationChance = 0.1;
+	evoDef.geneDeactivationChance = 0.1;
+	Evolution evo(evoDef);
 
 	IndividualDef def;
-	def.genesNum = 10;
-	def.inputNumber = 4;
-	def.outputNumber = 2;
+	def.genesNum = 0;
+	def.inputNumber = 2;
+	def.outputNumber = 1;
 	evo.createFirstGen(def);
+
+	std::uniform_int_distribution<> binaryNum(0,1);
+
+	for (unsigned i = 0; i < TEST_GEN; i++)
+	{
+		float sum = 0;
+		float count = 0;
+		while (evo.hasNextTestIndividual())
+		{
+			std::pair<Individual*, float> &test = evo.getTestIndividual();
+			Individual ind = *(test.first);
+			Brain neuralNet(ind);
+
+			for (size_t i = 0; i < TEST_AMOUNT; i++)
+			{
+				neuralNet.preProcessNodes();
+
+				int a = binaryNum(rng);
+				int b = binaryNum(rng);
+				(*(neuralNet.getInputs()[0])).setValue(a);
+				(*(neuralNet.getInputs()[1])).setValue(b);
+
+				neuralNet.processNodes();
+				float result = (*(neuralNet.getOutputs()[0])).getValue();
+
+				//std::cout << "#" << i << " = " << a << "->" << result << std::endl;
+
+				if ((result > 0.5 && a == 1 && b == 1)
+					|| (result < 0.5 && (a == 0 || b == 0))) {
+					test.second += 1;
+					//std::cout << "SUCESS" << std::endl;
+				}
+			}
+
+			sum += test.second;
+			++count;
+
+			if (i == TEST_GEN-1) {
+				std::cout << "Result is " << (double(test.second) / TEST_AMOUNT) << std::endl;
+			}
+		}
+
+		double mean = double(sum) / count;
+		std::cout << mean << std::endl;
+
+		out << i << "," << mean << std::endl;
+
+		if (i < TEST_GEN) {
+			evo.nextGen();
+		}
+	}
+
+	out.close();
+
 	evo.printInfo(std::cout);
-
-	Individual i = evo.getCurrentGeneration()[0];
-	Brain b(i);
-
 
 
 	system("PAUSE");

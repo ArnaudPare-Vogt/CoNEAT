@@ -39,7 +39,7 @@ void Node::freeze() {
 //Tries to fire the node
 void Node::fire() {
 	if (!activated) {
-		for each (Connection* c in inputs) {
+		for (Connection* c : inputs) {
 			cummulate((*c).fetchValue());
 		}
 		this->process();
@@ -89,6 +89,6 @@ int Node::getId() const {
 }
 
 //Returns the attached inputs of this node. Useful to navigate the graph
-std::vector<Connection*> Node::getInputs() {
+std::vector<Connection*> &Node::getInputs() {
 	return inputs;
 }
