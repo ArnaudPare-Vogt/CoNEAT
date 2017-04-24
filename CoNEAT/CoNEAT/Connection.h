@@ -1,15 +1,8 @@
 #pragma once
 
-#include "Neuron.h"
-	
+class Neuron;
 
 class Connection {
-	Neuron *in;//input node of connection
-	Neuron *out;//output node of connection
-	float wt;//weight of the connection 
-	bool recursive;//is the connection recursive?
-
-
 public:
 	//Creates a connection with the two input and output nodes, and the weight
 	Connection(Neuron &_in, Neuron &_out, float _wt);
@@ -28,8 +21,14 @@ public:
 	//setters
 	void setIn(Neuron &n);
 	void setOut(Neuron &n);
+	void setOut(Neuron *n);
+
 	void setWt(float w);
 	void setRecursivity(bool r);
-
-
+private:
+	Neuron *in;//input node of connection
+	Neuron *out;//output node of connection
+	float wt;//weight of the connection 
+	bool recursive;//is the connection recursive?
 };
+

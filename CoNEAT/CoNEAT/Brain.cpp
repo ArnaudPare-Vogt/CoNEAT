@@ -29,8 +29,8 @@ inputNumber(indiv.getInputNumber()), outputNumber(indiv.getOutputNumber()){
 			Neuron* in = getNode(link.in);
 			Neuron* out = getNode(link.out);
 
-			Connection c(*in, *out, link.weight);
-			connections.push_back(c);
+			Connection* c = out->createConnectionFrom(*in, link.weight);
+			//connections.push_back(c);
 		}
 	}
 
@@ -81,7 +81,7 @@ void Brain::processNodes() {
 
 //Creates a node if the node id has no node yet
 void Brain::createNode(int id) {
-	std::vector<Neuron>::iterator it = std::find_if(nodes.begin(), nodes.end(), [id](Neuron n) {
+	std::vector<Neuron>::iterator it = std::find_if(nodes.begin(), nodes.end(), [id](Neuron& n) {
 		return n.getId() == id;
 	});
 
@@ -92,7 +92,7 @@ void Brain::createNode(int id) {
 }
 
 Neuron* Brain::getNode(int id) {
-	std::vector<Neuron>::iterator it = std::find_if(nodes.begin(), nodes.end(), [id](Neuron n) {return n.getId() == id; });
+	std::vector<Neuron>::iterator it = std::find_if(nodes.begin(), nodes.end(), [id](Neuron& n) {return n.getId() == id; });
 	if (it == nodes.end()) {
 		return 0;
 	}
@@ -106,12 +106,11 @@ void Brain::fixRecursivity(Neuron& startNeuron, std::vector<int>& stack) {
 	
 	std::vector<Connection*> &con = startNeuron.getInputs();
 
-	for (Connection* connectionPtr : con) {
-		Connection &c = *connectionPtr;
-		Neuron &next = *(c.getIn());
+	for (Connection* c : con) {
+		Neuron &next = *(c->getIn());
 		if (std::find(stack.begin(), stack.end(), next.getId()) != stack.end()) {
 			//Neuron is recursive!!!
-			c.setRecursivity(true);
+			c->setRecursivity(true);
 		}
 		else {
 			//TODO chack if the neuron has been visited before

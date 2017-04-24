@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Connection.h"
+#include "Neuron.h"
 #include "Evo\Individual.h"
 #include <vector>
 
@@ -16,7 +16,7 @@ private:
 
 	std::vector<Neuron> nodes;
 	std::vector<Neuron*> input, output;
-	std::vector<Connection> connections;
+	//std::vector<Connection*> connections;
 
 public:
 	//Creates a brain from an individual

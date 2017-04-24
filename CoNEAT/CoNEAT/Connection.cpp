@@ -1,23 +1,21 @@
 #include "Connection.h"
+#include "Neuron.h"
 
 Connection::Connection(Neuron &_in, Neuron &_out, float _wt) :
 in(&_in), out(&_out), wt(_wt), recursive(false) {
-	_out.attachInput(*this);
 }
 
 Connection::Connection(const Connection &other) :
 	in(other.in), out(other.out), wt(other.wt), recursive(other.recursive) {
-	out->attachInput(*this);
 }
 
 Connection::~Connection() {
-	out->detatchInput(*this);
 }
 
 
 float Connection::fetchValue() {
 	if (recursive) {
-		return (*in).getLastValue();
+		return (*in).getLastValue() * wt;
 	}
 	else {
 		(*in).fire();
@@ -48,6 +46,9 @@ void Connection::setIn(Neuron &n) {
 }
 void Connection::setOut(Neuron &n) {
 	out = &n;
+}
+void Connection::setOut(Neuron *n) {
+	out = n;
 }
 void Connection::setWt(float w) {
 	wt = w;

@@ -9,7 +9,7 @@ TEST_CASE("Neuron constructors work", "[Neuron]") {
 	REQUIRE(node.getLastValue() == 0);
 
 	Neuron input(1);
-	Connection connection = Connection(input, node, 1);
+	node.createConnectionFrom(input, 1);
 
 	Neuron copiedNode = node;
 	REQUIRE(copiedNode.getId() == node.getId());
@@ -27,9 +27,9 @@ TEST_CASE("Neuron fireing works", "[Neuron]") {
 
 	Neuron testSubject(3);
 
-	Connection c1 = Connection(input1, testSubject, 0.5f);
-	Connection c2 = Connection(input2, testSubject, 1.f);
-	Connection c3 = Connection(input3, testSubject, 33.f);
+	testSubject.createConnectionFrom(input1, 0.5f);
+	testSubject.createConnectionFrom(input2, 1.f);
+	testSubject.createConnectionFrom(input3, 33.f);
 
 	input1.setValue(10);
 	input2.setValue(-10);
@@ -63,10 +63,10 @@ TEST_CASE("Simple net recursivity", "[Neuron]") {
 	Neuron middle = Neuron(1);
 	Neuron in  = Neuron(2);
 
-	Connection c1(middle, out, 1);
-	Connection c2(middle, middle, 1);
-	c2.setRecursivity(true);
-	Connection c3(in, middle, 1);
+	out.createConnectionFrom(middle, 1);
+	Connection* c2 = middle.createConnectionFrom(middle, 1);
+	c2->setRecursivity(true);
+	middle.createConnectionFrom(in, 1);
 
 	in.setValue(0.5f);
 
@@ -89,7 +89,7 @@ TEST_CASE("Method Neuron::freeze()", "[Neuron]") {
 	Neuron n1(0);
 	Neuron n2(1);
 
-	Connection c(n1, n2, 1);
+	n2.createConnectionFrom(n1, 1);
 
 	n1.setValue(10);
 	n2.freeze();
@@ -100,6 +100,36 @@ TEST_CASE("Method Neuron::freeze()", "[Neuron]") {
 
 }
 
-TEST_CASE("", "") {
+TEST_CASE("Method Neuron::detatchConnection()", "[Neuron]") {
+	Neuron test(0);
+	Neuron i1(1);
+	Neuron i2(1);
+	Neuron i3(1);
 
+	Connection* c1 = test.createConnectionFrom(i1, 1);
+	Connection* c2 = test.createConnectionFrom(i2, 1);
+	Connection* c3 = test.createConnectionFrom(i3, 1);
+
+	Connection* invalid = i2.createConnectionFrom(i3, 1);
+
+	REQUIRE(test.getInputs().size() == 3);
+
+	test.detatchInput(invalid);
+
+	REQUIRE(test.getInputs().size() == 3);
+
+	test.detatchInput(c1);
+
+	REQUIRE(test.getInputs().size() == 2);
+	auto ans = std::find(test.getInputs().begin(), test.getInputs().end(), c2);
+	REQUIRE(ans != test.getInputs().end());
+	ans = std::find(test.getInputs().begin(), test.getInputs().end(), c2);
+	REQUIRE(ans != test.getInputs().end());
+
+	test.detatchInput(c2);
+	REQUIRE(test.getInputs().size() == 1);
+	REQUIRE(test.getInputs()[0] == c3);
+
+	test.detatchInput(c3);
+	REQUIRE(test.getInputs().size() == 0);
 }

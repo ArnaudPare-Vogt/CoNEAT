@@ -115,6 +115,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="TConnection.cpp" />
     <ClCompile Include="TNeuron.cpp" />
   </ItemGroup>
   <ItemGroup>

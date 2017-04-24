@@ -1,9 +1,11 @@
 #pragma once
 
-#include "Function.h"
+#include <algorithm>
 #include <vector>
 
-class Connection;
+#include "Connection.h"
+#include "Function.h"
+
 
 class Neuron {
 public:
@@ -24,9 +26,11 @@ public:
 	void reset();
 
 	//Attaches c as an input
-	void attachInput(Connection& c);
+	//void attachInput(Connection& c);
 	//Detaches c from the input list
-	void detatchInput(Connection& c);
+	void detatchInput(Connection* c);
+	//creates a connection from in to this neuron
+	Connection* createConnectionFrom(Neuron& input, float weight);
 
 	void setValue(float value);
 
@@ -37,7 +41,7 @@ public:
 	//Returns the ID of the current Node
 	int getId() const;
 	//Returns the attached inputs of this node. Useful to navigate the graph
-	std::vector<Connection*> &getInputs();
+	std::vector<Connection*>& getInputs();
 
 private:
 	//Processes the nodes values using the activation function

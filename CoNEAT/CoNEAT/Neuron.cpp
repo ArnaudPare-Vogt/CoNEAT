@@ -21,14 +21,20 @@ Neuron::Neuron(const Neuron& other) :
 	activated_(other.activated_),
 	activationFunction_(other.activationFunction_),
 	cummulationFunction_(other.cummulationFunction_),
-	inputs_(other.inputs_){
+	inputs_(){
 
+	for (Connection* ptr : other.inputs_) {
+		createConnectionFrom(*(ptr->getIn()), ptr->getWt());
+	}
 }
 
 //Destroys this Node
 Neuron::~Neuron() {
 	//The activation and the incummulation functions should point toward 
 	//static functions, and should NOT be deleted
+	for (Connection* ptr : inputs_) {
+		delete ptr;
+	}
 }
 
 void Neuron::freeze() {
@@ -40,7 +46,7 @@ void Neuron::fire() {
 	if (!activated_) {
 		float incumulation = 0;
 		for (Connection* c : inputs_) {
-			incumulation = cummulate((*c).fetchValue(), incumulation);
+			incumulation = cummulate(c->fetchValue(), incumulation);
 		}
 		this->process(incumulation);
 		activated_ = true;
@@ -55,16 +61,23 @@ void Neuron::reset() {
 }
 
 //Attaches c as an input
-void Neuron::attachInput(Connection& c) {
-	inputs_.push_back(&c);
-}
+//void Neuron::attachInput(Connection& c) {
+//	inputs_.push_back(&c);
+//}
 
 //Detaches c from the input list
-void Neuron::detatchInput(Connection& c) {
-	std::vector<Connection*>::iterator it = std::find(inputs_.begin(), inputs_.end(), &c);
+void Neuron::detatchInput(Connection* c) {
+	std::vector<Connection*>::iterator it = std::find(inputs_.begin(), inputs_.end(), c);
 	if (it != inputs_.end()) {
+		delete *it;
 		inputs_.erase(it);
 	}
+}
+
+//creates a connection from in to this neuron
+Connection* Neuron::createConnectionFrom(Neuron& input, float weight) {
+	inputs_.push_back(new Connection(input, *this, weight));
+	return inputs_.back();
 }
 
 void Neuron::setValue(float value) {
