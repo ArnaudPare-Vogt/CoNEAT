@@ -1,8 +1,8 @@
-#include "Node.h"
+#include "Neuron.h"
 #include "Connection.h"
 
 //Creates a node of the given type.
-Node::Node(int nodeId) :
+Neuron::Neuron(int nodeId) :
 	nodeId_(nodeId),
 	lastValue_(0),
 	value_(0),
@@ -14,7 +14,7 @@ Node::Node(int nodeId) :
 
 //The copy constructor of the node.
 //This should match the Node(node_type) constructor
-Node::Node(const Node& other) :
+Neuron::Neuron(const Neuron& other) :
 	nodeId_(other.nodeId_),
 	value_(other.getValue()),
 	lastValue_(other.getLastValue()),
@@ -26,17 +26,17 @@ Node::Node(const Node& other) :
 }
 
 //Destroys this Node
-Node::~Node() {
+Neuron::~Neuron() {
 	//The activation and the incummulation functions should point toward 
 	//static functions, and should NOT be deleted
 }
 
-void Node::freeze() {
+void Neuron::freeze() {
 	activated_ = true;
 }
 
 //Tries to fire the node
-void Node::fire() {
+void Neuron::fire() {
 	if (!activated_) {
 		float incumulation = 0;
 		for (Connection* c : inputs_) {
@@ -49,47 +49,47 @@ void Node::fire() {
 
 //Resets the node. This has two impacts : flushes value into 
 //lastValue, and prepares the node for the next pass
-void Node::reset() {
+void Neuron::reset() {
 	lastValue_ = value_;
 	activated_ = false;
 }
 
 //Attaches c as an input
-void Node::attachInput(Connection& c) {
+void Neuron::attachInput(Connection& c) {
 	inputs_.push_back(&c);
 }
 
 //Detaches c from the input list
-void Node::detatchInput(Connection& c) {
+void Neuron::detatchInput(Connection& c) {
 	std::vector<Connection*>::iterator it = std::find(inputs_.begin(), inputs_.end(), &c);
 	if (it != inputs_.end()) {
 		inputs_.erase(it);
 	}
 }
 
-void Node::setValue(float value) {
+void Neuron::setValue(float value) {
 	this->value_ = value;
 	this->freeze();//Don't auto-delete our value upon processing!
 }
 
 
 //Gets the value of the node.
-float Node::getValue() const {
+float Neuron::getValue() const {
 	return value_;
 }
 
 //Gets the last value (the value of the last tick) of the node
-float Node::getLastValue() const {
+float Neuron::getLastValue() const {
 	return lastValue_;
 }
 
 //Returns the ID of the current Node
-int Node::getId() const {
+int Neuron::getId() const {
 	return nodeId_;
 }
 
 //Returns the attached inputs of this node. Useful to navigate the graph
-std::vector<Connection*> &Node::getInputs() {
+std::vector<Connection*> &Neuron::getInputs() {
 	return inputs_;
 }
 
@@ -102,13 +102,13 @@ std::vector<Connection*> &Node::getInputs() {
 
 
 
-void Node::process(float incummulation) 
+void Neuron::process(float incummulation)
 {
 	this->value_ = this->activationFunction_(incummulation);
 }
 
 
-float Node::cummulate(float n, float incummulation) 
+float Neuron::cummulate(float n, float incummulation)
 {
 	return this->cummulationFunction_(n, incummulation);
 };

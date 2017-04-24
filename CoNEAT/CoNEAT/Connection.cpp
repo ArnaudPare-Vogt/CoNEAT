@@ -1,6 +1,6 @@
 #include "Connection.h"
 
-Connection::Connection(Node &_in, Node &_out, float _wt) :
+Connection::Connection(Neuron &_in, Neuron &_out, float _wt) :
 in(&_in), out(&_out), wt(_wt), recursive(false) {
 	_out.attachInput(*this);
 }
@@ -26,11 +26,11 @@ float Connection::fetchValue() {
 }
 
 
-Node* Connection::getIn() {
+Neuron* Connection::getIn() {
 	return in;
 }
 
-Node* Connection::getOut() {
+Neuron* Connection::getOut() {
 	return out;
 }
 
@@ -43,10 +43,10 @@ bool Connection::isRecursive() {
 }
 
 
-void Connection::setIn(Node &n) {
+void Connection::setIn(Neuron &n) {
 	in = &n;
 }
-void Connection::setOut(Node &n) {
+void Connection::setOut(Neuron &n) {
 	out = &n;
 }
 void Connection::setWt(float w) {

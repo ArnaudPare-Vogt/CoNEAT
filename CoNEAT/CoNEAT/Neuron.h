@@ -5,13 +5,13 @@
 
 class Connection;
 
-class Node {
+class Neuron {
 public:
 	//Creates a node with the given id
-	Node(int nodeId);
+	Neuron(int nodeId);
 	//The copy constructor of the node.
-	Node(const Node& other);
-	~Node();
+	Neuron(const Neuron& other);
+	~Neuron();
 public:
 	//Tries to fire the node (if it has not been fired yet)
 	void fire();

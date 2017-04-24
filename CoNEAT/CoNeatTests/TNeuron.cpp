@@ -1,17 +1,17 @@
 #include <Catch/catch.hpp>
-#include <Node.h>
+#include <Neuron.h>
 #include <Connection.h>
 
 TEST_CASE("Neuron constructors work", "[Neuron]") {
-	Node node(0);
+	Neuron node(0);
 	REQUIRE(node.getId() == 0);
 	REQUIRE(node.getValue() == 0);
 	REQUIRE(node.getLastValue() == 0);
 
-	Node input(1);
+	Neuron input(1);
 	Connection connection = Connection(input, node, 1);
 
-	Node copiedNode = node;
+	Neuron copiedNode = node;
 	REQUIRE(copiedNode.getId() == node.getId());
 	REQUIRE(copiedNode.getInputs().size() == 1);
 	REQUIRE(copiedNode.getInputs()[0]->getIn()->getId() == input.getId());
@@ -21,11 +21,11 @@ TEST_CASE("Neuron constructors work", "[Neuron]") {
 }
 
 TEST_CASE("Neuron fireing works", "[Neuron]") {
-	Node input1(0);
-	Node input2(1);
-	Node input3(2);
+	Neuron input1(0);
+	Neuron input2(1);
+	Neuron input3(2);
 
-	Node testSubject(3);
+	Neuron testSubject(3);
 
 	Connection c1 = Connection(input1, testSubject, 0.5f);
 	Connection c2 = Connection(input2, testSubject, 1.f);
@@ -59,9 +59,9 @@ TEST_CASE("Neuron fireing works", "[Neuron]") {
 }
 
 TEST_CASE("Simple net recursivity", "[Neuron]") {
-	Node out = Node(0);
-	Node middle = Node(1);
-	Node in  = Node(2);
+	Neuron out = Neuron(0);
+	Neuron middle = Neuron(1);
+	Neuron in  = Neuron(2);
 
 	Connection c1(middle, out, 1);
 	Connection c2(middle, middle, 1);
@@ -85,9 +85,9 @@ TEST_CASE("Simple net recursivity", "[Neuron]") {
 	REQUIRE(out.getValue() == Approx(outVal2));
 }
 
-TEST_CASE("Method Node::freeze()", "[Neuron]") {
-	Node n1(0);
-	Node n2(1);
+TEST_CASE("Method Neuron::freeze()", "[Neuron]") {
+	Neuron n1(0);
+	Neuron n2(1);
 
 	Connection c(n1, n2, 1);
 

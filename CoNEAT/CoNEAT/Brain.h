@@ -14,8 +14,8 @@ private:
 	//Flag to see if pre process was called
 	bool preProcessed = false;
 
-	std::vector<Node> nodes;
-	std::vector<Node*> input, output;
+	std::vector<Neuron> nodes;
+	std::vector<Neuron*> input, output;
 	std::vector<Connection> connections;
 
 public:
@@ -34,15 +34,15 @@ public:
 	void processNodes();
 
 	//Getter for the input nodes.
-	inline const std::vector<Node*> getInputs() const { return input; };
+	inline const std::vector<Neuron*> getInputs() const { return input; };
 	//Getter for the output nodes
-	inline const std::vector<Node*> getOutputs() const { return output; };
+	inline const std::vector<Neuron*> getOutputs() const { return output; };
 
 private:
 	//Creates a node if the node id has no node yet. DO NOT CALL IF YOU DON'T KNOW WHAT YOU ARE DOING. NOT SAFE!!!
 	void createNode(int nodeId);
 	//Gets the node referenced (or a null pointer)
-	Node* getNode(int nodeID);
+	Neuron* getNode(int nodeID);
 	//Fixed and sets the correct flags in case the net is recursive
-	void fixRecursivity(Node& s, std::vector<int>& stack);
+	void fixRecursivity(Neuron& s, std::vector<int>& stack);
 };
