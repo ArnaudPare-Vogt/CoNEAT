@@ -1,7 +1,7 @@
 #include <fstream>
-#include "Function.h"
-#include "Evo\Evo.h"
-#include "Brain.h"
+#include <Function.h>
+#include <Evo\Evo.h>
+#include <Brain.h>
 
 #define WE_ARE_TESITNG 0
 

@@ -7,30 +7,11 @@ class Connection;
 
 class Node {
 public:
-private:
-	int nodeId;
-
-	float lastValue, value;
-	float incummulation;
-	//A flag to check if the current node is activated or if it should be. Internally used only.
-	bool activated;
-	float (*activationFunction)(float incumulation);
-	float (*cummulationFunction)(float n, float total);
-
-	std::vector<Connection*> inputs;
-
-public:
 	//Creates a node with the given id
 	Node(int nodeId);
 	//The copy constructor of the node.
 	Node(const Node& other);
 	~Node();
-private:
-	//Processes the nodes values using the activation function
-	inline void process() { this->value = this->activationFunction(this->incummulation); };
-	//Cumulates the value provided in the node
-	inline void cummulate(float n) { this->incummulation = this->cummulationFunction(n, this->incummulation); };
-	
 public:
 	//Tries to fire the node (if it has not been fired yet)
 	void fire();
@@ -57,4 +38,21 @@ public:
 	int getId() const;
 	//Returns the attached inputs of this node. Useful to navigate the graph
 	std::vector<Connection*> &getInputs();
+
+private:
+	//Processes the nodes values using the activation function
+	void process(float incummulation);
+	//Cumulates the value provided in the node
+	float cummulate(float n, float incummulation);
+
+private:
+	int nodeId_;
+
+	float lastValue_, value_;
+	//A flag to check if the current node is activated or if it should be. Internally used only.
+	bool activated_;
+	float(*activationFunction_)(float incumulation);
+	float(*cummulationFunction_)(float n, float total);
+
+	std::vector<Connection*> inputs_;
 };

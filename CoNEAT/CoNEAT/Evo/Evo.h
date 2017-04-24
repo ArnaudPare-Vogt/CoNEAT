@@ -12,15 +12,15 @@ struct EvolutionDef {
 	unsigned generationSize = 10;
 	unsigned selectionSize = 4;
 
-	float crossoverChance = 0.4;
-	float weightChangeChancePerGene = 0.1;
-	float weightChangeAmount = 0.2;
+	float crossoverChance = 0.4f;
+	float weightChangeChancePerGene = 0.1f;
+	float weightChangeAmount = 0.2f;
 
-	float nodeAdditionChance = 0.01;
-	float connectionAdditionChance = 0.01;
+	float nodeAdditionChance = 0.01f;
+	float connectionAdditionChance = 0.01f;
 
-	float geneActivationChance = 0.1;
-	float geneDeactivationChance = 0.1;
+	float geneActivationChance = 0.1f;
+	float geneDeactivationChance = 0.1f;
 };
 
 class Evolution{
