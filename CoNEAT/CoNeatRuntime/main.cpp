@@ -5,23 +5,6 @@
 
 #define WE_ARE_TESITNG 0
 
-
-#define NO_DEBUG 0
-#define DEBUG_LEVEL_REGULAR 1
-#define DEBUG_LEVEL_VERBROSE 2
-#define DEBUG DEBUG_LEVEL_REGULAR
-
-#if DEBUG == NO_DEBUG
-#define IFDEBUG(x)
-#define IFDEBUGV(x)
-#elif DEBUG == DEBUG_LEVEL_REGULAR
-#define IFDEBUG(x) x
-#define IFDEBUGV(x)
-#elif DEBUG == DEBUG_LEVEL_VERBROSE
-#define IFDEBUG(x) x
-#define IFDEBUGV(x) x
-#endif
-
 #if WE_ARE_TESITNG
 int test();
 #endif

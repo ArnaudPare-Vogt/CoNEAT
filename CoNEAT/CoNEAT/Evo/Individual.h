@@ -4,8 +4,8 @@
 #include <vector>
 #include <iostream>
 #include "../Rng.h"
+#include "Link.h"
 
-struct Link;
 class Evolution;
 
 struct IndividualDef {
@@ -41,15 +41,3 @@ public:
 	friend Evolution;
 };
 
-struct Link {
-
-	int in;
-	int out;
-	float weight;
-	bool activated;
-
-	Link();
-	Link(const Link &other);
-
-	friend std::ostream& operator<<(std::ostream& os, const Link& ind);
-};

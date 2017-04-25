@@ -25,8 +25,6 @@ public:
 	//lastValue, and prepares the node for the next pass
 	void reset();
 
-	//Attaches c as an input
-	//void attachInput(Connection& c);
 	//Detaches c from the input list
 	void detatchInput(Connection* c);
 	//creates a connection from in to this neuron

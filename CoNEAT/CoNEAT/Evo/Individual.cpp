@@ -77,24 +77,3 @@ const int Individual::getOutputNumber() const {
 }
 
 
-
-
-
-
-Link::Link(): 
-in(0), out(0), weight(1), activated(true) {}
-
-Link::Link(const Link& other) :
-in(other.in), out(other.out), weight(other.weight), activated(other.activated){}
-
-std::ostream& operator<<(std::ostream& os, const Link& link) {
-	if (link.activated) {
-		os << "Gene from N";
-	}
-	else {
-		os << "Unactive  N";
-	}
-
-	os << link.in << " to N" << link.out << " and weights " << link.weight << std::endl;
-	return os;
-}

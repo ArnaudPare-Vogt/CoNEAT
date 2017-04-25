@@ -60,11 +60,6 @@ void Neuron::reset() {
 	activated_ = false;
 }
 
-//Attaches c as an input
-//void Neuron::attachInput(Connection& c) {
-//	inputs_.push_back(&c);
-//}
-
 //Detaches c from the input list
 void Neuron::detatchInput(Connection* c) {
 	std::vector<Connection*>::iterator it = std::find(inputs_.begin(), inputs_.end(), c);

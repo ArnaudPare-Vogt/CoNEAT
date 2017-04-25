@@ -114,6 +114,7 @@
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="Evo\Evo.cpp" />
     <ClCompile Include="Evo\Individual.cpp" />
+    <ClCompile Include="Evo\Link.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="Neuron.cpp" />
     <ClCompile Include="Rng.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="Connection.h" />
     <ClInclude Include="Evo\Evo.h" />
     <ClInclude Include="Evo\Individual.h" />
+    <ClInclude Include="Evo\Link.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Neuron.h" />
     <ClInclude Include="Rng.h" />

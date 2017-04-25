@@ -36,6 +36,9 @@
     <ClCompile Include="Neuron.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Evo\Link.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Function.h">
@@ -57,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Neuron.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Evo\Link.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
