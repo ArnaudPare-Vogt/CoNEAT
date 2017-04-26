@@ -64,16 +64,16 @@ Brain::~Brain() {
 
 
 void Brain::preProcessNodes() {
-	for each(Neuron n in nodes) {
+	for (Neuron& n : nodes) {
 		n.reset();
 	}
 }
 
 void Brain::processNodes() {
-	for each(Neuron* nPtr in input) {
+	for (Neuron* nPtr : input) {
 		(*nPtr).freeze();
 	}
-	for each (Neuron* nPtr in output){
+	for (Neuron* nPtr : output) {
 		(*nPtr).fire();
 	}
 }

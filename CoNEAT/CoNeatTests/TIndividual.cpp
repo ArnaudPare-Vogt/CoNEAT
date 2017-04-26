@@ -1,6 +1,7 @@
 #include <Catch\catch.hpp>
 #include <Evo\Individual.h>
 
+
 TEST_CASE("Individual constructor", "[Individual]") {
 	IndividualDef def;
 	def.genesNum = 10;
@@ -59,4 +60,32 @@ TEST_CASE("Individual constructor", "[Individual]") {
 }
 
 
+TEST_CASE("Input and output verification", "[Individual]") {
+	std::vector<Link> testLinks;
+
+	testLinks.push_back(Link(0, 1));
+	testLinks.push_back(Link(0, 2));
+	testLinks.push_back(Link(0, 3));
+	testLinks.push_back(Link(2, 1));
+	testLinks.push_back(Link(3, 1));
+	testLinks.push_back(Link(4, 5));
+	testLinks.push_back(Link(3, 4));
+
+	Individual ind(testLinks, 2, 1);
+
+	REQUIRE(ind.isInput(0) == true);
+	REQUIRE(ind.isInput(1) == true);
+	REQUIRE(ind.isInput(2) == false);
+	REQUIRE(ind.isInput(3) == false);
+	REQUIRE(ind.isInput(4) == false);
+	REQUIRE(ind.isInput(5) == false);
+
+
+	REQUIRE(ind.isOutput(0) == false);
+	REQUIRE(ind.isOutput(1) == false);
+	REQUIRE(ind.isOutput(2) == true);
+	REQUIRE(ind.isOutput(3) == false);
+	REQUIRE(ind.isOutput(4) == false);
+	REQUIRE(ind.isOutput(5) == false);
+}
 

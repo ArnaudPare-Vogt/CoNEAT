@@ -64,6 +64,14 @@ std::ostream& operator<<(std::ostream& os, const Individual& ind) {
 	return os;
 }
 
+bool Individual::isInput(int nodeId) const {
+	return 0 <= nodeId && nodeId < inputNumber;
+}
+
+bool Individual::isOutput(int nodeId) const {
+	return inputNumber <= nodeId && nodeId < inputNumber + outputNumber;
+}
+
 const std::vector<Link>& Individual::getGenes() const {
 	return genes;
 }

@@ -33,6 +33,10 @@ public:
 	Individual(const Individual &other);
 	friend std::ostream& operator<<(std::ostream& os, const Individual& ind);
 
+	//Checks if the node is an input
+	bool isInput(int nodeId) const;
+	//Checks if the node is an output
+	bool isOutput(int nodeId) const;
 
 	const std::vector<Link>& getGenes() const;
 	const int getInputNumber() const;

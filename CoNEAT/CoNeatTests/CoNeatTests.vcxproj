@@ -115,6 +115,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="TBrain.cpp" />
     <ClCompile Include="TConnection.cpp" />
     <ClCompile Include="TIndividual.cpp" />
     <ClCompile Include="TLink.cpp" />

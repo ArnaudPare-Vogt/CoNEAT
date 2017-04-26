@@ -50,19 +50,27 @@ std::ostream& Evolution::printInfo(std::ostream &in) const {
 	return in;
 }
 
-std::pair<Individual*, float>& Evolution::getTestIndividual() {
-	std::pair<Individual*, float>& pair = testPlot.at(testIndex);
-	testIndex++;
-	return pair;
-}
-
-bool Evolution::hasNextTestIndividual() const{
-	return testIndex < testPlot.size();
-}
-
 const std::vector<Individual>& Evolution::getCurrentGeneration() const {
 	return currentGenetation;
 }
+
+
+Evolution::testplot_iterator Evolution::getTestPlotBeginIterator() {
+	return testPlot.begin();
+}
+
+Evolution::testplot_iterator Evolution::getTestPlotEndIterator() {
+	return testPlot.end();
+}
+
+Evolution::const_testplot_iterator Evolution::getTestPlotBeginIterator() const {
+	return testPlot.cbegin();
+}
+
+Evolution::const_testplot_iterator Evolution::getTestPlotEndIterator() const {
+	return testPlot.cend();
+}
+
 
 void Evolution::nextGen() {
 	

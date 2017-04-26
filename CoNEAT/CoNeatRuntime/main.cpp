@@ -1,4 +1,8 @@
 #include <fstream>
+#include <iomanip>
+#include <string>
+#include <stdexcept>
+
 #include <Function.h>
 #include <Evo\Evo.h>
 #include <Brain.h>
@@ -9,8 +13,23 @@
 int test();
 #endif
 
-#define TEST_GEN 100
-#define TEST_AMOUNT 50
+#define TEST_GEN 400
+#define TEST_AMOUNT 4
+
+
+
+
+
+void saveToCSV(const Individual& ind, const std::string& fileName) {
+	std::ofstream out(fileName);
+	out << "Source,Target,Weight,Activated,i,o\n";
+	for (const Link& l : ind.getGenes()) {
+		out << l.in << "," << l.out << "," << l.weight << "," << l.activated << "," << ind.isInput(l.in) << "," << ind.isOutput(l.out) << "\n";
+	}
+}
+
+
+
 
 int main(int argc, char** argv) {
 #if WE_ARE_TESITNG
@@ -29,7 +48,7 @@ int main(int argc, char** argv) {
 	evoDef.nodeAdditionChance = 0.001;
 	evoDef.connectionAdditionChance = 0.001;
 	evoDef.generationSize = 100;
-	evoDef.selectionSize = 10;
+	evoDef.selectionSize = 20;
 	evoDef.geneActivationChance = 0.1;
 	evoDef.geneDeactivationChance = 0.1;
 	Evolution evo(evoDef);
@@ -46,9 +65,9 @@ int main(int argc, char** argv) {
 	{
 		float sum = 0;
 		float count = 0;
-		while (evo.hasNextTestIndividual())
+		for (auto it = evo.getTestPlotBeginIterator(); it != evo.getTestPlotEndIterator(); ++it)
 		{
-			std::pair<Individual*, float> &test = evo.getTestIndividual();
+			std::pair<Individual*, float> &test = (*it);
 			Individual ind = *(test.first);
 			Brain neuralNet(ind);
 
@@ -56,8 +75,8 @@ int main(int argc, char** argv) {
 			{
 				neuralNet.preProcessNodes();
 
-				int a = binaryNum(rng);
-				int b = binaryNum(rng);
+				int a = i & 0x1;
+				int b = (i & 0x2) >> 1;
 				(*(neuralNet.getInputs()[0])).setValue(a);
 				(*(neuralNet.getInputs()[1])).setValue(b);
 
@@ -66,8 +85,8 @@ int main(int argc, char** argv) {
 
 				//std::cout << "#" << i << " = " << a << "->" << result << std::endl;
 
-				if ((result > 0.5 && a == 1 && b == 1)
-					|| (result < 0.5 && (a == 0 || b == 0))) {
+				if ((result > 0.5 && (a == b))
+					|| (result < 0.5 && (a != b))) {
 					test.second += 1;
 					//std::cout << "SUCESS" << std::endl;
 				}
@@ -77,11 +96,11 @@ int main(int argc, char** argv) {
 			++count;
 
 			if (i == TEST_GEN-1) {
-				std::cout << "Result is " << (double(test.second) / TEST_AMOUNT) << std::endl;
+				std::cout << std::setw(3) << count << " - Result is " << (double(test.second) / TEST_AMOUNT) << std::endl;
 			}
 		}
 
-		double mean = double(sum) / count;
+		double mean = double(sum) / count / TEST_AMOUNT;
 		std::cout << mean << std::endl;
 
 		out << i << "," << mean << std::endl;
@@ -93,10 +112,32 @@ int main(int argc, char** argv) {
 
 	out.close();
 
-	evo.printInfo(std::cout);
+	std::cout << "To save an individual, enter it's number.\nTo quit, enter 'q'" << std::endl;
+	
+	std::string command;
+	while ((std::cin >> command), (command != "q")) {
+		try {
+			int num = std::stoi(command);
+			num--;
 
+			int maxSize = evo.getCurrentGeneration().size();
 
-	system("PAUSE");
+			if (num < 0 || num >= evo.getCurrentGeneration().size()) {
+				std::cout << "The number must be between 1 and " << maxSize << std::endl;
+				continue;
+			}
+
+			std::string fileName = std::string("Individual_") + std::to_string(num) + ".csv";
+
+			saveToCSV(evo.getCurrentGeneration()[num], fileName);
+		}
+		catch (const std::invalid_argument& e) {
+
+		}
+	}
+
+	//evo.printInfo(std::cout);
+
 }
 
 
