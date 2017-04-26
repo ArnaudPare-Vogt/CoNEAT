@@ -27,5 +27,8 @@
     <ClCompile Include="TLink.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TIndividual.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@
 int test();
 #endif
 
-#define TEST_GEN 200
+#define TEST_GEN 100
 #define TEST_AMOUNT 50
 
 int main(int argc, char** argv) {
@@ -27,9 +27,9 @@ int main(int argc, char** argv) {
 	EvolutionDef evoDef;
 	evoDef.weightChangeChancePerGene = 0.5;
 	evoDef.nodeAdditionChance = 0.001;
-	evoDef.geneActivationChance = 0.2;
-	evoDef.generationSize = 1000;
-	evoDef.selectionSize = 250;
+	evoDef.connectionAdditionChance = 0.001;
+	evoDef.generationSize = 100;
+	evoDef.selectionSize = 10;
 	evoDef.geneActivationChance = 0.1;
 	evoDef.geneDeactivationChance = 0.1;
 	Evolution evo(evoDef);
