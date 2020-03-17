@@ -1,6 +1,6 @@
 #pragma once
 
-#include <math.h>
+#include <cmath>
 
 //A header destined to create static functions that can be used in the nodes cumulation
 //and activation functions

@@ -7,18 +7,8 @@
 #include <Evo\Evo.h>
 #include <Brain.h>
 
-#define WE_ARE_TESITNG 0
-
-#if WE_ARE_TESITNG
-int test();
-#endif
-
-#define TEST_GEN 400
-#define TEST_AMOUNT 4
-
-
-
-
+static const unsigned TEST_GEN = 400;
+static const unsigned TEST_AMOUNT = 4;
 
 void saveToCSV(const Individual& ind, const std::string& fileName) {
 	std::ofstream out(fileName);
@@ -32,14 +22,6 @@ void saveToCSV(const Individual& ind, const std::string& fileName) {
 
 
 int main(int argc, char** argv) {
-#if WE_ARE_TESITNG
-	{
-		int i = test();
-		if (i != 0) {
-			return i;
-		}
-	}
-#endif
 	std::ofstream out("output.csv");
 	out << "generation, test_mean_val" << std::endl;
 
@@ -139,37 +121,3 @@ int main(int argc, char** argv) {
 	//evo.printInfo(std::cout);
 
 }
-
-
-#if WE_ARE_TESITNG
-int test() {
-	Link l;
-	std::vector<Link> genes;
-
-	//TESTING #1
-	IFDEBUGV(::cout << "  - Testing #1 (returns 1)" << std::endl;)
-	l.in = 0;
-	l.out = 1;
-	l.weight = 3.14;
-	genes.push_back(l);
-	Individual ind(genes, 1, 1);
-	Brain brain(ind);
-	float in1 = 1;
-	float expectedOut1 = tanh(3.14);
-	brain.preProcessNodes();
-	(*(brain.getInputs()[0])).setValue(1);
-	brain.processNodes();
-	float realOut1 = (*(brain.getOutputs()[0])).getValue();
-
-	if (abs(expectedOut1 - realOut1) < 0.0001) {
-		std::cout << "G - Test #1 success!. Expected " << expectedOut1 << " got " << realOut1 << std::endl;
-	}
-	else {
-		std::cout << "B - Test #1 failed. Expected " << expectedOut1 << " got " << realOut1 << std::endl;
-	}
-
-
-	
-	return 0;
-}
-#endif
