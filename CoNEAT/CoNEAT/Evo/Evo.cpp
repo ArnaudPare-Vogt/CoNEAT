@@ -1,5 +1,7 @@
 #include "Evo.h"
 
+#include <algorithm>
+
 
 Evolution::Evolution(const EvolutionDef &def) 
 	: generationSize(def.generationSize),
@@ -254,13 +256,27 @@ void Evolution::nextGen() {
 					int outputNeuronId = outputNeuron(rng);
 					outputNeuronId += inputNumber;
 
-					Link link;
-					link.in = inputNeuronId;
-					link.out = outputNeuronId;
-					for (unsigned j = 0; j < currentGenetation.size(); j++)
-					{
-						link.activated = (j == i);
-						currentGenetation[j].genes.push_back(link);
+					// Don't introduce duplicate connections!
+					auto result = std::find_if(currentGenetation[i].genes.begin(), currentGenetation[i].genes.end(), [&inputNeuronId, &outputNeuronId](Link& l) {
+						return l.in == inputNeuronId && l.out == outputNeuronId;
+					});
+
+					if (result == currentGenetation[i].genes.end()) {
+						Link link;
+						link.in = inputNeuronId;
+						link.out = outputNeuronId;
+						for (unsigned j = 0; j < currentGenetation.size(); j++)
+						{
+							link.activated = (j == i);
+							currentGenetation[j].genes.push_back(link);
+						}
+					}
+					else if (!result->activated) {
+						// Activate the link if it already exsists
+						result->activated = true;
+					}
+					else {
+						// Failed mutation, do nothing
 					}
 				}
 			}

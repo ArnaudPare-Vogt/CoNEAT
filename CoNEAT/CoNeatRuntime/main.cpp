@@ -30,7 +30,8 @@ void saveAsDot(const Individual& ind, const std::string& fileName) {
 		out << "N" << nodeId << ";\n";
 	}
 	for (const Link& l : ind.getGenes()) {
-		out << "N" << l.in << " -> " << "N" << l.out << ";\n";
+		std::string color = l.activated ? "black" : "grey";
+		out << "N" << l.in << " -> " << "N" << l.out << "[label=\"" << l.weight << "\", color=\"" << color << "\"]" << ";\n";
 	}
 	out << "}";
 }
