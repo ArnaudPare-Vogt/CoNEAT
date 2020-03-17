@@ -203,18 +203,17 @@ void Evolution::nextGen() {
 						nextNodeIndex++;
 
 						Link& oldLnk = currentGenetation[i].genes[geneID];
-						int inputNeuronId = oldLnk.in;
-						int outputNeuronId = oldLnk.out;
 
 						Link newLinkA;
-						newLinkA.in = inputNeuronId;
+						newLinkA.in = oldLnk.in;
 						newLinkA.out = newNeuronId;
 						newLinkA.activated = false;
 
 						Link newLinkB;
 						newLinkB.in = newNeuronId;
-						newLinkB.out = outputNeuronId;
+						newLinkB.out = oldLnk.out;
 						newLinkB.activated = false;
+						newLinkB.weight = oldLnk.weight;
 
 						for (unsigned j = 0; j < currentGenetation.size(); j++)
 						{
@@ -225,10 +224,10 @@ void Evolution::nextGen() {
 								newLinkB.activated = true;
 								ind.genes.push_back(newLinkA);
 								ind.genes.push_back(newLinkB);
-								newLinkA.activated = false;
-								newLinkB.activated = false;
 							}
 							else {
+								newLinkA.activated = false;
+								newLinkB.activated = false;
 								ind.genes.push_back(newLinkA);
 								ind.genes.push_back(newLinkB);
 							}
