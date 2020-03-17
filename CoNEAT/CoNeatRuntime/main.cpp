@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iomanip>
+#include <set>
 #include <string>
 #include <stdexcept>
 
@@ -17,7 +18,22 @@ void saveToCSV(const Individual& ind, const std::string& fileName) {
 		out << l.in << "," << l.out << "," << l.weight << "," << l.activated << "," << ind.isInput(l.in) << "," << ind.isOutput(l.out) << "\n";
 	}
 }
-
+void saveAsDot(const Individual& ind, const std::string& fileName) {
+	std::ofstream out(fileName);
+	out << "digraph {\n";
+	std::set<int> nodes = {};
+	for (const Link& l : ind.getGenes()) {
+		nodes.insert(l.in);
+		nodes.insert(l.out);
+	}
+	for (const int& nodeId : nodes) {
+		out << "N" << nodeId << ";\n";
+	}
+	for (const Link& l : ind.getGenes()) {
+		out << "N" << l.in << " -> " << "N" << l.out << ";\n";
+	}
+	out << "}";
+}
 
 
 
@@ -26,13 +42,13 @@ int main(int argc, char** argv) {
 	out << "generation, test_mean_val" << std::endl;
 
 	EvolutionDef evoDef;
-	evoDef.weightChangeChancePerGene = 0.5;
-	evoDef.nodeAdditionChance = 0.001;
-	evoDef.connectionAdditionChance = 0.001;
+	evoDef.weightChangeChancePerGene = 0.1;
+	evoDef.nodeAdditionChance = 0.0001;
+	evoDef.connectionAdditionChance = 0.0001;
 	evoDef.generationSize = 100;
 	evoDef.selectionSize = 20;
-	evoDef.geneActivationChance = 0.1;
-	evoDef.geneDeactivationChance = 0.1;
+	evoDef.geneActivationChance = 0.01;
+	evoDef.geneDeactivationChance = 0.01;
 	Evolution evo(evoDef);
 
 	IndividualDef def;
@@ -50,7 +66,7 @@ int main(int argc, char** argv) {
 		for (auto it = evo.getTestPlotBeginIterator(); it != evo.getTestPlotEndIterator(); ++it)
 		{
 			std::pair<Individual*, float> &test = (*it);
-			Individual ind = *(test.first);
+			const Individual& ind = *(test.first);
 			Brain neuralNet(ind);
 
 			for (size_t i = 0; i < TEST_AMOUNT; i++)
@@ -94,11 +110,16 @@ int main(int argc, char** argv) {
 
 	out.close();
 
-	std::cout << "To save an individual, enter it's number.\nTo quit, enter 'q'" << std::endl;
+	std::cout << "To save an individual, enter its number.\nTo save a dot file of an idividual, enter 'd' and the idividuals number.\nTo quit, enter 'q'" << std::endl;
 	
 	std::string command;
 	while ((std::cin >> command), (command != "q")) {
 		try {
+			bool saveAsDotFile = command.size() >= 1 && command.rfind("d", 0) == 0;
+			if (saveAsDotFile) {
+				command = command.substr(1, command.size() - 1);
+			}
+
 			int num = std::stoi(command);
 			num--;
 
@@ -109,9 +130,14 @@ int main(int argc, char** argv) {
 				continue;
 			}
 
-			std::string fileName = std::string("Individual_") + std::to_string(num) + ".csv";
-
-			saveToCSV(evo.getCurrentGeneration()[num], fileName);
+			if (saveAsDotFile) {
+				std::string fileName = std::string("Individual_") + std::to_string(num) + ".dot";
+				saveAsDot(evo.getCurrentGeneration()[num], fileName);
+			}
+			else {
+				std::string fileName = std::string("Individual_") + std::to_string(num) + ".csv";
+				saveToCSV(evo.getCurrentGeneration()[num], fileName);
+			}
 		}
 		catch (const std::invalid_argument& e) {
 
