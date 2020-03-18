@@ -132,42 +132,63 @@ void Evolution::nextGen() {
 	{
 		currentGenetation.clear();
 		unsigned size = toCrossover.at(0).getGenes().size();
-		std::uniform_int_distribution<int> splitPos(0, size);
-		for (int i = 0; i < generationSize; i+=2)
+		std::uniform_int_distribution<int> splitPos(0, 1);
+		for (unsigned i = 0; i < generationSize; i++)
 		{
-			Individual parentA = toCrossover.at((i + 0) % toCrossover.size());
-			Individual parentB = toCrossover.at((i + 1) % toCrossover.size());
+			Individual parentA = toCrossover.at((static_cast<size_t>(i) + 0) % toCrossover.size());
+			Individual parentB = toCrossover.at((static_cast<size_t>(i) + 1) % toCrossover.size());
 
 			const std::vector<Link> &linksA = parentA.getGenes();
 			const std::vector<Link> &linksB = parentB.getGenes();
-			assert(linksA.size() == linksB.size());
 			
-			std::vector<Link> newGenesA;
-			std::vector<Link> newGenesB;
+			std::vector<Link> child;
 
 			unsigned split = 0;
 			if (fract(rng) < crossoverChance) {
 				split = splitPos(rng);
 			}
 
-			for (unsigned j = 0; j < split; j++)
-			{
-				newGenesA.push_back(linksA[j]);
-				newGenesB.push_back(linksB[j]);
-			}
-			for (unsigned j = split; j < size; j++)
-			{
-				newGenesA.push_back(linksB[j]);
-				newGenesB.push_back(linksA[j]);
+			size_t parent_a_index = 0;
+			size_t parent_b_index = 0;
+			for (;;) {
+				if (parent_a_index == linksA.size()) {
+					for (; parent_b_index < linksB.size(); ++parent_b_index) {
+						child.push_back(linksB[parent_b_index]);
+					}
+					break;
+				}
+				else if (parent_b_index == linksB.size()) {
+					for (; parent_a_index < linksA.size(); ++parent_a_index) {
+						child.push_back(linksA[parent_a_index]);
+					}
+					break;
+				}
+
+				if (linksA[parent_a_index].historical_innovation_number == linksB[parent_b_index].historical_innovation_number) {
+					if (splitPos(rng) == 0) {
+						child.push_back(linksA[parent_a_index]);
+					}
+					else {
+						child.push_back(linksB[parent_b_index]);
+					}
+					parent_a_index++;
+					parent_b_index++;
+				}
+				else if (linksA[parent_a_index].historical_innovation_number < linksB[parent_b_index].historical_innovation_number) {
+					child.push_back(linksA[parent_a_index]);
+					parent_a_index++;
+				}
+				else if (linksA[parent_a_index].historical_innovation_number > linksB[parent_b_index].historical_innovation_number) {
+					child.push_back(linksB[parent_b_index]);
+					parent_b_index++;
+				}
+				else {
+					assert(false);
+				}
 			}
 
-			Individual indA(newGenesA, parentA.getInputNumber(), parentA.getOutputNumber());
+			Individual indA(child, parentA.getInputNumber(), parentA.getOutputNumber());
 			currentGenetation.push_back(indA);
-
-			if (i + 1 < generationSize) {
-				Individual indB(newGenesB, parentB.getInputNumber(), parentB.getOutputNumber());
-				currentGenetation.push_back(indB);
-			}
 		}
 	}
 
@@ -175,7 +196,6 @@ void Evolution::nextGen() {
 	{
 		//a) change weights
 		{
-			unsigned size = currentGenetation[0].genes.size();
 			std::uniform_real_distribution<float> wheightChange(-weightChangeAmount, weightChangeAmount);
 			for (unsigned i = 0; i < currentGenetation.size(); i++)
 			{
@@ -191,9 +211,9 @@ void Evolution::nextGen() {
 
 		//b) mutate node additions
 		{
-			if (currentGenetation[0].genes.size() > 0) {
-				for (unsigned i = 0; i < currentGenetation.size(); i++)
-				{
+			for (unsigned i = 0; i < currentGenetation.size(); i++)
+			{
+				if (currentGenetation[i].genes.size() > 0) {
 					if (fract(rng) < nodeAdditionChance) {
 						std::uniform_int_distribution<> geneToSplit(0, currentGenetation[i].genes.size() - 1);
 						int geneID = geneToSplit(rng);
@@ -209,6 +229,7 @@ void Evolution::nextGen() {
 						newLinkA.out = newNeuronId;
 						newLinkA.activated = false;
 						newLinkA.historical_innovation_number = ++next_innovation_number;
+						newLinkA.activated = true;
 
 						Link newLinkB;
 						newLinkB.in = newNeuronId;
@@ -216,24 +237,11 @@ void Evolution::nextGen() {
 						newLinkB.activated = false;
 						newLinkB.weight = oldLnk.weight;
 						newLinkB.historical_innovation_number = ++next_innovation_number;
+						newLinkB.activated = true;
 
-						for (unsigned j = 0; j < currentGenetation.size(); j++)
-						{
-							Individual &ind = currentGenetation[j];
-							if (j == i) {
-								ind.genes[geneID].activated = false;
-								newLinkA.activated = true;
-								newLinkB.activated = true;
-								ind.genes.push_back(newLinkA);
-								ind.genes.push_back(newLinkB);
-							}
-							else {
-								newLinkA.activated = false;
-								newLinkB.activated = false;
-								ind.genes.push_back(newLinkA);
-								ind.genes.push_back(newLinkB);
-							}
-						}
+						currentGenetation[i].genes[geneID].activated = false;
+						currentGenetation[i].genes.push_back(newLinkA);
+						currentGenetation[i].genes.push_back(newLinkB);
 					}
 				}
 			}
@@ -267,12 +275,8 @@ void Evolution::nextGen() {
 						link.in = inputNeuronId;
 						link.out = outputNeuronId;
 						link.historical_innovation_number = ++next_innovation_number;
-
-						for (unsigned j = 0; j < currentGenetation.size(); j++)
-						{
-							link.activated = (j == i);
-							currentGenetation[j].genes.push_back(link);
-						}
+						link.activated = true;
+						currentGenetation[i].genes.push_back(link);
 					}
 					else if (!result->activated) {
 						// Activate the link if it already exsists
