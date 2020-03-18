@@ -208,12 +208,14 @@ void Evolution::nextGen() {
 						newLinkA.in = oldLnk.in;
 						newLinkA.out = newNeuronId;
 						newLinkA.activated = false;
+						newLinkA.historical_innovation_number = ++next_innovation_number;
 
 						Link newLinkB;
 						newLinkB.in = newNeuronId;
 						newLinkB.out = oldLnk.out;
 						newLinkB.activated = false;
 						newLinkB.weight = oldLnk.weight;
+						newLinkB.historical_innovation_number = ++next_innovation_number;
 
 						for (unsigned j = 0; j < currentGenetation.size(); j++)
 						{
@@ -264,6 +266,8 @@ void Evolution::nextGen() {
 						Link link;
 						link.in = inputNeuronId;
 						link.out = outputNeuronId;
+						link.historical_innovation_number = ++next_innovation_number;
+
 						for (unsigned j = 0; j < currentGenetation.size(); j++)
 						{
 							link.activated = (j == i);

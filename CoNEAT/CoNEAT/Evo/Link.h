@@ -9,10 +9,11 @@ struct Link {
 	int out;
 	float weight;
 	bool activated;
+	unsigned historical_innovation_number;
 
 	Link();
-	Link(int in, int out);
-	Link(const Link &other);
+	Link(int in, int out, unsigned historical_innovation_number);
+	Link(const Link &other) = default;
 
 	//Splits this link in two parts.
 	Pair splitThisLink(int middleNodeId) const;

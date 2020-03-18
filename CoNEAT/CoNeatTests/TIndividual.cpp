@@ -33,11 +33,11 @@ TEST_CASE("Individual constructor", "[Individual]") {
 
 	std::vector<Link> testLinks;
 
-	testLinks.push_back(Link(0, 1));
-	testLinks.push_back(Link(0, 2));
-	testLinks.push_back(Link(0, 3));
-	testLinks.push_back(Link(2, 1));
-	testLinks.push_back(Link(3, 1));
+	testLinks.push_back(Link(0, 1, 0));
+	testLinks.push_back(Link(0, 2, 1));
+	testLinks.push_back(Link(0, 3, 2));
+	testLinks.push_back(Link(2, 1, 3));
+	testLinks.push_back(Link(3, 1, 4));
 
 	Individual ind(testLinks, 1, 1);
 
@@ -63,13 +63,13 @@ TEST_CASE("Individual constructor", "[Individual]") {
 TEST_CASE("Input and output verification", "[Individual]") {
 	std::vector<Link> testLinks;
 
-	testLinks.push_back(Link(0, 1));
-	testLinks.push_back(Link(0, 2));
-	testLinks.push_back(Link(0, 3));
-	testLinks.push_back(Link(2, 1));
-	testLinks.push_back(Link(3, 1));
-	testLinks.push_back(Link(4, 5));
-	testLinks.push_back(Link(3, 4));
+	testLinks.push_back(Link(0, 1, 0));
+	testLinks.push_back(Link(0, 2, 1));
+	testLinks.push_back(Link(0, 3, 2));
+	testLinks.push_back(Link(2, 1, 3));
+	testLinks.push_back(Link(3, 1, 4));
+	testLinks.push_back(Link(4, 5, 5));
+	testLinks.push_back(Link(3, 4, 6));
 
 	Individual ind(testLinks, 2, 1);
 

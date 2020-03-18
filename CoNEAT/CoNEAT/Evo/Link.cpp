@@ -1,16 +1,11 @@
 #include "Link.h"
 
 Link::Link() :
-	Link(0,0) {}
+	Link(0, 0, 0) {}
 
-Link::Link(int in, int out) :
-	in(in), out(out), weight(1), activated(true){}
+Link::Link(int in, int out, unsigned historical_innovation_number) :
+	in(in), out(out), weight(1), activated(true), historical_innovation_number(historical_innovation_number) {}
 	
-
-Link::Link(const Link& other) :
-	in(other.in), out(other.out), weight(other.weight), activated(other.activated) {}
-
-
 Link::Pair Link::splitThisLink(int middleNodeId) const {
 	Link first;
 	Link second;

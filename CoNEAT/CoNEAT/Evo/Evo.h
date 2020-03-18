@@ -65,6 +65,7 @@ private:
 
 	std::vector<Individual> currentGenetation;
 
+	unsigned next_innovation_number = 0;
 
 	std::vector<std::pair<Individual*, float>> testPlot;
 	unsigned testIndex;

@@ -7,11 +7,13 @@ TEST_CASE("Link constructors", "[Link]") {
 	REQUIRE(l.out == 0);
 	REQUIRE(l.weight == 1);
 	REQUIRE(l.activated == true);
+	REQUIRE(l.historical_innovation_number == 0);
 
 	l.in = 2;
 	l.out = 3;
 	l.activated = false;
 	l.weight = 0.2f;
+	l.historical_innovation_number = 20;
 
 	Link l2 = l;
 
@@ -19,16 +21,18 @@ TEST_CASE("Link constructors", "[Link]") {
 	REQUIRE(l2.out == 3);
 	REQUIRE(l2.weight == 0.2f);
 	REQUIRE(l2.activated == false);
+	REQUIRE(l2.historical_innovation_number == 20);
 
-	Link l3(1, 2);
+	Link l3(1, 2, 1);
 	REQUIRE(l3.in == 1);
 	REQUIRE(l3.out == 2);
 	REQUIRE(l3.weight == 1);
 	REQUIRE(l3.activated == true);
+	REQUIRE(l3.historical_innovation_number == 1);
 }
 
 TEST_CASE("Link splitting", "[Link]") {
-	Link l(2,3);
+	Link l(2,3,0);
 	l.weight = 10;
 	Link::Pair ls = l.splitThisLink(4);
 

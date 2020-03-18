@@ -3,10 +3,10 @@
 
 TEST_CASE("Brain constructor", "[Brain]") {
 	std::vector<Link> topology;
-	topology.push_back(Link(0, 3));
-	topology.push_back(Link(1, 2));
-	topology.push_back(Link(1, 3));
-	topology.push_back(Link(3, 2));
+	topology.push_back(Link(0, 3, 0));
+	topology.push_back(Link(1, 2, 1));
+	topology.push_back(Link(1, 3, 2));
+	topology.push_back(Link(3, 2, 3));
 
 	topology[0].weight = 16.f;
 	topology[1].weight = -0.6f;
@@ -49,10 +49,10 @@ TEST_CASE("Brain constructor", "[Brain]") {
 
 TEST_CASE("Brain fire/reset", "[Brain") {
 	std::vector<Link> topology;
-	topology.push_back(Link(0, 2));
-	topology.push_back(Link(0, 3));
-	topology.push_back(Link(1, 2));
-	topology.push_back(Link(1, 3));
+	topology.push_back(Link(0, 2, 0));
+	topology.push_back(Link(0, 3, 1));
+	topology.push_back(Link(1, 2, 2));
+	topology.push_back(Link(1, 3, 3));
 
 
 	Individual ind(topology, 2, 2);
@@ -84,8 +84,8 @@ TEST_CASE("Brain fire/reset", "[Brain") {
 
 TEST_CASE("Brain, 'and' gate test", "[Brain]") {
 	std::vector<Link> topology;
-	topology.push_back(Link(0, 2));
-	topology.push_back(Link(1, 2));
+	topology.push_back(Link(0, 2, 0));
+	topology.push_back(Link(1, 2, 1));
 
 	topology[0].weight = 0.6f;
 	topology[1].weight = 0.6f;
