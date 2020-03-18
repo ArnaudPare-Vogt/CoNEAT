@@ -16,3 +16,5 @@
 float sum(float n, float total);
 
 //Activation functions
+float sigmoid(float x);
+float fast_sigmoid(float x);

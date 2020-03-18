@@ -8,7 +8,7 @@ Neuron::Neuron(int nodeId) :
 	value_(0),
 	activated_(false){
 
-	activationFunction_ = &std::tanh;
+	activationFunction_ = &fast_sigmoid;
 	cummulationFunction_ = &sum;
 }
 
