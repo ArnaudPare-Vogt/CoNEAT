@@ -23,6 +23,11 @@ void Evolution::createFirstGen(IndividualDef& definition) {
 	nextNodeIndex = definition.inputNumber + definition.outputNumber;
 	this->currentGenetation.clear();
 	Individual ind(definition);
+	for (int in_neuron = 0; in_neuron < ind.inputNumber; ++in_neuron) {
+		for (int out_neuron = ind.inputNumber; out_neuron < ind.inputNumber + ind.outputNumber; ++out_neuron) {
+			ind.genes.emplace_back(in_neuron, out_neuron, ++next_innovation_number);
+		}
+	}
 	for (unsigned i = 0; i < generationSize; i++) 
 	{
 		currentGenetation.push_back(ind);
