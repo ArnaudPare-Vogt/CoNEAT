@@ -8,8 +8,8 @@
 #include <Evo\Evo.h>
 #include <Brain.h>
 
-static const unsigned TEST_GEN = 400;
-static const unsigned TEST_AMOUNT = 4;
+static const unsigned TEST_GEN = 4000;
+static const unsigned TEST_AMOUNT = 20;
 
 void saveToCSV(const Individual& ind, const std::string& fileName) {
 	std::ofstream out(fileName);
@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 	EvolutionDef evoDef;
 	evoDef.weightChangeChancePerGene = 0.1;
 	evoDef.nodeAdditionChance = 0.0001;
-	evoDef.connectionAdditionChance = 0.0001;
+	evoDef.connectionAdditionChance = 0.001;
 	evoDef.generationSize = 100;
 	evoDef.selectionSize = 20;
 	evoDef.geneActivationChance = 0.01;
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
 
 	IndividualDef def;
 	def.genesNum = 0;
-	def.inputNumber = 2;
+	def.inputNumber = 3;
 	def.outputNumber = 1;
 	evo.createFirstGen(def);
 
@@ -70,25 +70,25 @@ int main(int argc, char** argv) {
 			const Individual& ind = *(test.first);
 			Brain neuralNet(ind);
 
+			std::uniform_real_distribution<float> inputGenerator;
 			for (size_t i = 0; i < TEST_AMOUNT; i++)
 			{
 				neuralNet.preProcessNodes();
 
-				int a = i & 0x1;
-				int b = (i & 0x2) >> 1;
+				float a = inputGenerator(rng);
+				float b = inputGenerator(rng);
 				(*(neuralNet.getInputs()[0])).setValue(a);
 				(*(neuralNet.getInputs()[1])).setValue(b);
+				(*(neuralNet.getInputs()[2])).setValue(1.0f); // bias
 
 				neuralNet.processNodes();
 				float result = (*(neuralNet.getOutputs()[0])).getValue();
 
+				float expectedResult = (a >= 0.5) && (b >= 0.5) ? 1.0f : 0.0f;
+
 				//std::cout << "#" << i << " = " << a << "->" << result << std::endl;
 
-				if ((result > 0.5 && (a == b))
-					|| (result < 0.5 && (a != b))) {
-					test.second += 1;
-					//std::cout << "SUCESS" << std::endl;
-				}
+				test.second += 1 - std::abs(result - expectedResult);
 			}
 
 			sum += test.second;
